@@ -1,0 +1,100 @@
+FROM php:7.4-fpm
+
+RUN apt-get update \
+    && echo 'deb http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list \
+    && echo 'deb-src http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list \
+    && apt-get install -y wget gnupg \
+    && wget https://www.dotdeb.org/dotdeb.gpg \
+    && apt-key add dotdeb.gpg \
+    && apt-get update \
+    && apt-get install -y libpq-dev && docker-php-ext-install pdo pdo_pgsql \
+    && docker-php-ext-install pdo_mysql \
+    && apt-get update \
+    && apt install -y libmagickwand-dev --no-install-recommends  \
+    && pecl install imagick && docker-php-ext-enable imagick  \
+    && apt-get update && apt-get install -y wget git unzip \
+    && pecl install xdebug-3.1.0 \
+    && docker-php-ext-enable xdebug\
+    && rm -rf /var/lib/apt/lists/*
+
+
+RUN apt-get update -qq && apt-get install -qqy --no-install-recommends \
+        software-properties-common  \
+        libxml2-dev \
+        curl libcurl4 libcurl4-openssl-dev \
+        zlib1g-dev libicu-dev g++ \
+        libpq-dev \
+        sudo \
+        netcat \
+        libfcgi0ldbl\
+        libmagickwand-dev \
+        ffmpeg\
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libpng-dev \
+        libzip-dev \
+        libonig-dev \
+        git \
+        nano \
+        vim \
+        unzip \
+        rsyslog
+
+
+RUN docker-php-ext-configure bcmath --enable-bcmath \
+    && docker-php-ext-configure pcntl --enable-pcntl \
+    && docker-php-ext-configure mbstring --enable-mbstring \
+    && docker-php-ext-configure soap --enable-soap \
+    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include
+
+
+RUN docker-php-ext-install -j$(nproc) \
+    opcache \
+    pdo \
+    pdo_pgsql \
+    pgsql \
+    json \
+    mbstring \
+    soap \
+    bcmath \
+    gettext \
+    intl \
+    xml \
+    simplexml \
+    dom \
+    zip \
+    iconv\
+    curl\
+    gd \
+    pcntl
+
+
+
+ENV PHP_ENABLE_XDEBUG=0 \
+    PATH=/www:/var/www/vendor/bin:/root/.composer/vendor/bin:$PATH \
+    TERM=linux \
+    VERSION_PRESTISSIMO_PLUGIN=^0.3.7 \
+    COMPOSER_ALLOW_SUPERUSER=1
+
+
+# Add GITHUB_API_TOKEN support for composer
+
+RUN mkdir /usr/local/bin/composer
+
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- \
+        --filename=composer.phar \
+        --install-dir=/usr/local/bin
+
+RUN chmod 777 \
+        /usr/local/bin/composer
+
+ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=1000 --with-fpm-group=1000
+
+COPY ./ /var/www/html/
+
+ADD ./xdebug.ini /usr/local/etc/xdebug/xdebug.ini
+
+
+#При перебилде php /usr/local/bin/composer.phar update т.к версии ничего ни с чем не совпадают из контекста php контейнера
