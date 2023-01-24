@@ -39,7 +39,7 @@ services:
       - POSTGRES_PASSWORD=test
       - POSTGRES_DB=test
     ports:
-      - 35432:5432
+      - 5432:5432
   adminer:
     image: adminer
     container_name: adminer.systeme.io
