@@ -9,12 +9,14 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Страница расчета цены продукта</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Users/danilshayakhmetov/PhpstormProjects/systeme.io/app/src/Controller/ProductController.php'|file_link(0) }}">src/Controller/ProductController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Users/danilshayakhmetov/PhpstormProjects/systeme.io/app/templates/product/index.html.twig'|file_link(0) }}">templates/product/index.html.twig</a></code></li>
-    </ul>
+    Выберите товар для расчета итоговой стоимости:
+
+    {{ form(product_form) }}
+    <h2>Итого: {{ price }}</h2>
+    <h2> {{ error }}</h2>
 </div>
+
+
 {% endblock %}
