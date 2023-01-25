@@ -87,14 +87,18 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
         --filename=composer.phar \
         --install-dir=/usr/local/bin
 
-RUN chmod 777 \
-        /usr/local/bin/composer
+RUN chmod -R 777 \
+        /usr/local/bin/composer.phar
 
 ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=1000 --with-fpm-group=1000
 
 COPY ./ /var/www/html/
 
 ADD ./xdebug.ini /usr/local/etc/xdebug/xdebug.ini
+
+WORKDIR /app
+
+CMD bash -c "composer install"
 
 
 #При перебилде php /usr/local/bin/composer.phar update т.к версии ничего ни с чем не совпадают из контекста php контейнера

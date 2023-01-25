@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,7 +47,7 @@ class ProductController extends AbstractController
         ]);
     }
 
-    private function getProductForm(ManagerRegistry $doctrine)
+    private function getProductForm(ManagerRegistry $doctrine): FormInterface
     {
         $products = $doctrine->getRepository(Product::class)->findAll();
 
@@ -58,7 +59,7 @@ class ProductController extends AbstractController
 
         return $this->createFormBuilder()
             ->add('price', ChoiceType::class, [
-                'choices'  => array_reduce($products, function($priceList, $product){
+                'choices' => array_reduce($products, function ($priceList, $product) {
                     $priceList[$product->getName()] = $product->getPrice();
                     return $priceList;
                 }),

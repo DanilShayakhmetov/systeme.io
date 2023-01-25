@@ -72,7 +72,6 @@ class AppFixtures extends Fixture
             ->setTaxation('0.24');
         $manager->persist($tax);
 
-
         $manager->flush();
     }
 }
