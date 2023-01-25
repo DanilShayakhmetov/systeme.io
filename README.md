@@ -10,12 +10,14 @@
     cp .env.dist .env
 
 ###Версии
+
     Docker version 20.10.12
     docker-compose version 1.29.2
     PHP >= 7.4
     Composer version 2.4.1 
 
 ###Условие 
+
     Написать symfony приложение для рассчета цены продукта для покупателя
 
     Пример:
