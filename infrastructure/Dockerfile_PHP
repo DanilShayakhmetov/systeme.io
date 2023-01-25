@@ -96,9 +96,5 @@ COPY ./ /var/www/html/
 
 ADD ./xdebug.ini /usr/local/etc/xdebug/xdebug.ini
 
-WORKDIR /app
-
-CMD bash -c "composer install"
-
 
 #При перебилде php /usr/local/bin/composer.phar update т.к версии ничего ни с чем не совпадают из контекста php контейнера
