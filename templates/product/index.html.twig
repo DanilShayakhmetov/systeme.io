@@ -14,8 +14,11 @@
     Выберите товар для расчета итоговой стоимости:
 
     {{ form(product_form) }}
+    {% if price %}
     <h2>Итого: {{ price }}</h2>
+    {% elseif error %}
     <h2> {{ error }}</h2>
+    {% endif %}
 </div>
 
 

@@ -32,7 +32,7 @@ class ProductController extends AbstractController
             ]);
 
             if ($tax) {
-                $priceWithTax = $this->getPriceWithTax($data, $tax->getTaxation());
+                $priceWithTax = $data['price'] * (1 + $tax->getTaxation());
             } else {
                 $errMsg = 'Отсутсвуют данные по налоговому сбору для данного региона, проверьте корректность tax номера';
             }
@@ -73,10 +73,5 @@ class ProductController extends AbstractController
             ])
             ->add('send', SubmitType::class)
             ->getForm();
-    }
-
-    private function getPriceWithTax(array $data, string $tax)
-    {
-        return $data['price'] * (1 + $tax);
     }
 }
